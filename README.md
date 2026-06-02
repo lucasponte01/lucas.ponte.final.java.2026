@@ -3,7 +3,19 @@
 
 *Presentacion*:hola soy lucas ponte , estudio programacion en la utn de avellaneda y este es mi proyecto para el final de programacion 2 .
 
-*Resumen*:Sistema de gestión de personas que permite administrar empleados, estudiantes y clientes. Permite agregar, listar, actualizar y eliminar personas, ordenarlas por nombre o edad, filtrarlas  y aplicar modificaciones."
+*Resumen*:Sistema de gestión de personas con interfaz gráfica en JavaFX. que permite administrar empleados, estudiantes y clientes. Permite agregar, listar, actualizar y eliminar personas, ordenarlas por nombre o edad, filtrarlas  y aplicar modificaciones."
+
+*Qué permite hacer*
+
+Agregar, listar, actualizar y eliminar personas (Empleados, Estudiantes y Clientes)
+
+Ordenar la lista por nombre o por edad
+
+Filtrar personas mayores de 30 años
+
+Aplicar aumentos de sueldo a todos los empleados
+
+Guardar y cargar datos en formato .dat, .csv, .json y .txt
 
 *Como se usa*:
 
@@ -27,3 +39,56 @@
 
 [personas.csv](https://github.com/user-attachments/files/28489633/personas.csv)
 
+personas.json
+json[
+  {
+    "id": 1,
+    "nombre": "lucas",
+    "edad": 21,
+    "genero": "Masculino",
+    "tipo": "Empleado"
+  },
+  {
+    "id": 2,
+    "nombre": "mariel",
+    "edad": 40,
+    "genero": "Femenino",
+    "tipo": "Estudiante"
+  },
+  {
+    "id": 3,
+    "nombre": "lopez",
+    "edad": 50,
+    "genero": "Masculino",
+    "tipo": "Cliente"
+  }
+]
+
+personas.txt
+==============================
+  LISTADO DE PERSONAS
+  Fecha: Tue Jun 02 00:52:56 ART 2026
+==============================
+
+Nombre : lucas
+Edad   : 21
+Género : Masculino
+Tipo   : Empleado
+------------------------------
+Nombre : mariel
+Edad   : 40
+Género : Femenino
+Tipo   : Estudiante
+------------------------------
+Nombre : lopez
+Edad   : 50
+Género : Masculino
+Tipo   : Cliente
+------------------------------
+
+Total registros: 3
+
+personas.dat
+
+El archivo personas.dat contiene la lista de personas serializada en formato binario.
+Se genera automáticamente al presionar el botón Guardar .dat en la aplicación y se recupera con Cargar .dat.

@@ -21,16 +21,21 @@ Guardar y cargar datos en formato .dat, .csv, .json y .txt
 
 1.Completar el formulario de la izquierda y apretar Agregar.
 
-<img width="895" height="574" alt="Captura de pantalla 2026-06-01 215241" src="https://github.com/user-attachments/assets/df9f6f04-3f38-4fe9-8878-564e7091f71c" />
+<img width="1365" height="766" alt="Captura de pantalla 2026-06-07 191140" src="https://github.com/user-attachments/assets/301349b9-8e4d-4c79-854c-ffd059338836" />
+
 2.Seleccionar un id y una fila de la tabla para editar.
+<img width="1365" height="766" alt="Captura de pantalla 2026-06-07 191429" src="https://github.com/user-attachments/assets/19295401-62e1-48e5-8f38-08c85f28500e" />
+
+<img width="1365" height="767" alt="Captura de pantalla 2026-06-07 191452" src="https://github.com/user-attachments/assets/0be0e17b-b5fe-44af-a9c0-ddcb10515659" />
 
 3.Usar los botones de ordenar y filtrar.
+<img width="1365" height="767" alt="Captura de pantalla 2026-06-07 191511" src="https://github.com/user-attachments/assets/0fe65acc-1f7c-49cb-b22d-d8fd255fa02d" />
 
-<img width="896" height="577" alt="Captura de pantalla 2026-06-01 215558" src="https://github.com/user-attachments/assets/71978f1e-745a-484f-9b43-c1274f4f94f2" />
+<img width="1365" height="766" alt="Captura de pantalla 2026-06-07 191519" src="https://github.com/user-attachments/assets/dce4b879-5511-4ffb-8c0a-0f14d5b03792" />
+
 4.Guardar y cargar datos con los botones de persistencia.
-
-<img width="892" height="577" alt="Captura de pantalla 2026-06-01 215752" src="https://github.com/user-attachments/assets/96402c39-64f8-4f70-acff-1cf967fe37bb" />
-
+<img width="1365" height="767" alt="Captura de pantalla 2026-06-07 191615" src="https://github.com/user-attachments/assets/fb960054-bfc5-4443-9751-728b3696697c" />
+<img width="1365" height="767" alt="Captura de pantalla 2026-06-07 191623" src="https://github.com/user-attachments/assets/f9e8728a-f896-43dc-ae24-3b135ec07fb6" />
 
 *Foto de el diagrama UML*
 <img width="1560" height="1130" alt="progra2_casi final" src="https://github.com/user-attachments/assets/7258c4d7-50e8-49e2-b0bc-9bd9de611179" />

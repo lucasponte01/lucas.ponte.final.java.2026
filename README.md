@@ -20,10 +20,9 @@ Guardar y cargar datos en formato .dat, .csv, .json y .txt
 *Como se usa*:
 
 1.Completar el formulario de la izquierda y apretar Agregar.
+<img width="1365" height="767" alt="Captura de pantalla 2026-06-07 192446" src="https://github.com/user-attachments/assets/90dcc9b9-40fd-4f31-8adb-24d207761346" />
 
-<img width="1365" height="766" alt="Captura de pantalla 2026-06-07 191140" src="https://github.com/user-attachments/assets/301349b9-8e4d-4c79-854c-ffd059338836" />
-
-<img width="1365" height="767" alt="Captura de pantalla 2026-06-07 192259" src="https://github.com/user-attachments/assets/6b68420f-2c4f-476a-860a-86040eaedad4" />
+<img width="1365" height="767" alt="Captura de pantalla 2026-06-07 192517" src="https://github.com/user-attachments/assets/ac00a1ce-591f-4171-9f0a-86a5e7dd94a7" />
 
 2.Seleccionar un id y una fila de la tabla para editar.
 <img width="1365" height="766" alt="Captura de pantalla 2026-06-07 191429" src="https://github.com/user-attachments/assets/19295401-62e1-48e5-8f38-08c85f28500e" />

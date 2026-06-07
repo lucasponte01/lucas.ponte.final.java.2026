@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 
 public class Principal extends Application {
 
-    // Gestión y lista observable para la tabla
+    
     private Gestion<Persona> gestion = new Gestion<>();
     private ObservableList<Persona> listaObservable = FXCollections.observableArrayList();
     private TableView<Persona> tabla = new TableView<>();
@@ -20,7 +20,7 @@ public class Principal extends Application {
     @Override
     public void start(Stage stage) {
 
-        // ── TABLA ──────────────────────────────────────────────
+        //Tabla
         TableColumn<Persona, Integer> colId = new TableColumn<>("ID");
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
 
@@ -40,7 +40,7 @@ public class Principal extends Application {
         tabla.setItems(listaObservable);
         tabla.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        // ── FORMULARIO ─────────────────────────────────────────
+        // Formulario
         TextField txtId     = new TextField(); txtId.setPromptText("ID");
         TextField txtNombre = new TextField(); txtNombre.setPromptText("Nombre");
         TextField txtEdad   = new TextField(); txtEdad.setPromptText("Edad");
@@ -53,7 +53,7 @@ public class Principal extends Application {
         cmbTipo.getItems().addAll("Empleado", "Estudiante", "Cliente");
         cmbTipo.setPromptText("Tipo");
 
-        // Campos específicos por tipo
+        
         TextField txtExtra1 = new TextField(); txtExtra1.setPromptText("Sueldo / Carrera / Email");
         TextField txtExtra2 = new TextField(); txtExtra2.setPromptText("Puesto / Promedio / TipoCliente");
 
@@ -67,7 +67,7 @@ public class Principal extends Application {
         form.add(new Label("Extra 1:"), 0, 5); form.add(txtExtra1,  1, 5);
         form.add(new Label("Extra 2:"), 0, 6); form.add(txtExtra2,  1, 6);
 
-        // ── BOTONES CRUD ───────────────────────────────────────
+        // Bt 
         Button btnAgregar   = new Button("Agregar");
         Button btnActualizar = new Button("Actualizar");
         Button btnEliminar  = new Button("Eliminar");
@@ -162,7 +162,7 @@ public class Principal extends Application {
             }
         });
 
-        // Limpiar formulario
+        // Limpiar
         btnLimpiar.setOnAction(e -> {
             txtId.clear(); txtNombre.clear(); txtEdad.clear();
             txtExtra1.clear(); txtExtra2.clear();
@@ -170,7 +170,7 @@ public class Principal extends Application {
             lblMensaje.setText("");
         });
 
-        // Seleccionar fila en tabla → cargar en formulario
+       
         tabla.getSelectionModel().selectedItemProperty().addListener((obs, old, sel) -> {
             if (sel != null) {
                 txtId.setText(String.valueOf(sel.getId()));
@@ -184,20 +184,20 @@ public class Principal extends Application {
         HBox botonescrud = new HBox(8, btnAgregar, btnActualizar, btnEliminar, btnLimpiar);
         botonescrud.setPadding(new Insets(8));
 
-        // ── BOTONES EXTRAS ─────────────────────────────────────
+        //Bt 2
         Button btnOrdenarNombre = new Button("Ordenar por Nombre");
         Button btnOrdenarEdad   = new Button("Ordenar por Edad");
         Button btnFiltrarMayores = new Button("Filtrar +30");
         Button btnAumento       = new Button("Aumento 10%");
 
         btnOrdenarNombre.setOnAction(e -> {
-            gestion.ordenar(); // usa Comparable
+            gestion.ordenar();
             actualizarTabla();
             lblMensaje.setText("Ordenado por nombre.");
         });
 
         btnOrdenarEdad.setOnAction(e -> {
-            gestion.ordenar(Comparar.porEdad()); // usa Comparator
+            gestion.ordenar(Comparar.porEdad()); 
             actualizarTabla();
             lblMensaje.setText("Ordenado por edad.");
         });
@@ -221,7 +221,7 @@ public class Principal extends Application {
                                         btnFiltrarMayores, btnAumento);
         botonesExtra.setPadding(new Insets(8));
 
-        // ── BOTONES PERSISTENCIA ───────────────────────────────
+        // Bt 3
         Button btnGuardarDat = new Button("Guardar .dat");
         Button btnCargarDat  = new Button("Cargar .dat");
         Button btnGuardarCSV = new Button("Guardar CSV");
@@ -258,7 +258,7 @@ public class Principal extends Application {
                                        btnGuardarCSV, btnGuardarJSON, btnExportarTXT);
         botonesPers.setPadding(new Insets(8));
 
-        // ── LAYOUT PRINCIPAL ───────────────────────────────────
+        
         VBox izquierda = new VBox(8, new Label("Formulario"), form, botonescrud);
         izquierda.setPadding(new Insets(8));
 

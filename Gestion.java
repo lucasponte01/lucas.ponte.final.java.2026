@@ -102,12 +102,12 @@ public class Gestion<P extends Persona> implements Administrar<P> {
     
     
 
-        // Orden natural — usa compareTo() de Persona (por nombre)
+        
         public void ordenar() {
             Collections.sort(administrar);
         }
 
-        // Orden personalizado — usa un Comparator
+        
         public void ordenar(Comparator<P> comparador) {
             administrar.sort(comparador);
         }
@@ -138,10 +138,7 @@ public class Gestion<P extends Persona> implements Administrar<P> {
     }
  
  
-// ------------------------------------------------------------
-//  2. CSV — guardar y cargar en formato separado por comas
-// ------------------------------------------------------------
- 
+
     public void guardarCSV(String archivo) {
         try (
             FileWriter fw = new FileWriter(archivo);
@@ -184,10 +181,7 @@ public class Gestion<P extends Persona> implements Administrar<P> {
     }
  
  
-// ------------------------------------------------------------
-//  3. JSON — guardar en formato JSON sin librerías externas
-// ------------------------------------------------------------
- 
+
     public void guardarJSON(String archivo) {
         try (
             FileWriter fw = new FileWriter(archivo);
@@ -223,10 +217,7 @@ public class Gestion<P extends Persona> implements Administrar<P> {
     }
  
  
-// ------------------------------------------------------------
-//  4. TXT — exportar listado filtrado con encabezado legible
-// ------------------------------------------------------------
- 
+
     public void exportarTXT(String archivo, Predicate<P> criterio) {
         try (
             FileWriter fw = new FileWriter(archivo);

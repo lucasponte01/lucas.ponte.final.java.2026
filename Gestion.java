@@ -102,16 +102,17 @@ public class Gestion<P extends Persona> implements Administrar<P> {
     
     
 
-        
+        // Orden natural — usa compareTo() de Persona (por nombre)
         public void ordenar() {
             Collections.sort(administrar);
         }
 
-        
+        // Orden personalizado — usa un Comparator
         public void ordenar(Comparator<P> comparador) {
             administrar.sort(comparador);
         }
     
+    //persistencia    
     public void guardarDat(String archivo) {
     try (
         FileOutputStream fos = new FileOutputStream(archivo);
@@ -124,7 +125,7 @@ public class Gestion<P extends Persona> implements Administrar<P> {
         }
     }
  
-    @SuppressWarnings("unchecked")
+
     public void cargarDat(String archivo) {
         try (
             FileInputStream fis = new FileInputStream(archivo);
@@ -138,24 +139,33 @@ public class Gestion<P extends Persona> implements Administrar<P> {
     }
  
  
-
     public void guardarCSV(String archivo) {
-        try (
-            FileWriter fw = new FileWriter(archivo);
-            BufferedWriter bw = new BufferedWriter(fw)
-        ) {
-           
-            bw.write("id,nombre,edad,genero,tipo");
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivo))) {
+            
+            bw.write("id,nombre,edad,genero,tipo,datoExtra1,datoExtra2");
             bw.newLine();
 
             for (P p : administrar) {
-                bw.write(
-                    p.getId() + "," +
-                    p.getNombre() + "," +
-                    p.getEdad() + "," +
-                    p.getGenero() + "," +
-                    p.getClass().getSimpleName()
-                );
+                StringBuilder linea = new StringBuilder();
+                linea.append(p.getId()).append(",")
+                     .append(p.getNombre()).append(",")
+                     .append(p.getEdad()).append(",")
+                     .append(p.getGenero()).append(",")
+                     .append(p.getClass().getSimpleName());
+
+                // Agregar datos específicos según la clase
+                if (p instanceof Empleado emp) {
+                    linea.append(",").append(emp.getSueldo())
+                         .append(",").append(emp.getPuesto()); // Aquí se guarda el puesto real
+                } else if (p instanceof Estudiante est) {
+                    linea.append(",").append(est.getCarrera())
+                         .append(",").append(est.getPromedio());
+                } else if (p instanceof Cliente cli) {
+                    linea.append(",").append(cli.getEmail())
+                         .append(",").append(cli.getTipoCliente()); // Aquí se guarda el tipo real
+                }
+
+                bw.write(linea.toString());
                 bw.newLine();
             }
             System.out.println("Lista guardada en CSV: " + archivo);
@@ -165,59 +175,146 @@ public class Gestion<P extends Persona> implements Administrar<P> {
     }
  
     public void cargarCSV(String archivo) {
-        try (
-            BufferedReader br = new BufferedReader(new FileReader(archivo))
-        ) {
-            br.readLine(); 
+        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+            br.readLine();
             String linea;
             while ((linea = br.readLine()) != null) {
                 String[] datos = linea.split(",");
-                
-                System.out.println("Leído: " + datos[1] + " (" + datos[4] + ")");
+                if (datos.length < 7) continue;
+                int id = Integer.parseInt(datos[0].trim());
+                String nombre = datos[1].trim();
+                int edad = Integer.parseInt(datos[2].trim());
+                Genero genero = Genero.valueOf(datos[3].trim());
+                String tipo = datos[4].trim();
+                String extra1 = datos[5].trim();
+                String extra2 = datos[6].trim();
+                Persona p = null;
+                switch (tipo) {
+                    case "Empleado" ->
+                        p = new Empleado(id, nombre, edad, genero,
+                            Integer.parseInt(extra1),
+                            Puesto.valueOf(extra2));
+                    case "Estudiante" ->
+                        p = new Estudiante(id, nombre, edad, genero,
+                            extra1, Integer.parseInt(extra2));
+                    case "Cliente" ->
+                        p = new Cliente(id, nombre, edad, genero,
+                            extra1, TipoCliente.valueOf(extra2));
+                }
+                if (p != null) administrar.add((P) p);
             }
+            System.out.println("CSV cargado correctamente.");
         } catch (IOException e) {
             System.out.println("Error al cargar CSV: " + e.getMessage());
         }
     }
- 
- 
 
+ 
     public void guardarJSON(String archivo) {
-        try (
-            FileWriter fw = new FileWriter(archivo);
-            BufferedWriter bw = new BufferedWriter(fw)
-        ) {
-            bw.write("[");
-            bw.newLine();
+         try (
+             FileWriter fw = new FileWriter(archivo);
+             BufferedWriter bw = new BufferedWriter(fw)
+         ) {
+             bw.write("[");
+             bw.newLine();
 
-            for (int i = 0; i < administrar.size(); i++) {
-                P p = administrar.get(i);
-                bw.write("  {");
-                bw.newLine();
-                bw.write("    \"id\": " + p.getId() + ",");
-                bw.newLine();
-                bw.write("    \"nombre\": \"" + p.getNombre() + "\",");
-                bw.newLine();
-                bw.write("    \"edad\": " + p.getEdad() + ",");
-                bw.newLine();
-                bw.write("    \"genero\": \"" + p.getGenero() + "\",");
-                bw.newLine();
-                bw.write("    \"tipo\": \"" + p.getClass().getSimpleName() + "\"");
-                bw.newLine();
-                
-                bw.write(i < administrar.size() - 1 ? "  }," : "  }");
-                bw.newLine();
+             for (int i = 0; i < administrar.size(); i++) {
+                 P p = administrar.get(i);
+                 bw.write("  {");
+                 bw.newLine();
+                 bw.write("    \"id\": " + p.getId() + ",");
+                 bw.newLine();
+                 bw.write("    \"nombre\": \"" + p.getNombre() + "\",");
+                 bw.newLine();
+                 bw.write("    \"edad\": " + p.getEdad() + ",");
+                 bw.newLine();
+                 bw.write("    \"genero\": \"" + p.getGenero() + "\",");
+                 bw.newLine();
+                 bw.write("    \"tipo\": \"" + p.getClass().getSimpleName() + "\""); // Sin coma inicial, la controlamos abajo
+
+                 // --- ESCRIBIR ATRIBUTOS ESPECÍFICOS ---
+                 if (p instanceof Empleado emp) {
+                     bw.write(","); bw.newLine();
+                     bw.write("    \"sueldo\": " + emp.getSueldo() + ","); bw.newLine();
+                     bw.write("    \"puesto\": \"" + emp.getPuesto() + "\"");
+                 } else if (p instanceof Estudiante est) {
+                     bw.write(","); bw.newLine();
+                     bw.write("    \"carrera\": \"" + est.getCarrera() + "\","); bw.newLine();
+                     bw.write("    \"promedio\": " + est.getPromedio());
+                 } else if (p instanceof Cliente cli) {
+                     bw.write(","); bw.newLine();
+                     bw.write("    \"email\": \"" + cli.getEmail() + "\","); bw.newLine();
+                     bw.write("    \"tipoCliente\": \"" + cli.getTipoCliente() + "\"");
+                 }
+                 bw.newLine();
+
+                 // Cerrar el objeto actual del array
+                 bw.write(i < administrar.size() - 1 ? "  }," : "  }");
+                 bw.newLine();
+             }
+      
+             
+             bw.write("]");
+             System.out.println("Lista guardada en JSON: " + archivo);
+         } catch (IOException e) {
+             System.out.println("Error al guardar JSON: " + e.getMessage());
+         }
+     }
+ 
+    public void cargarJSON(String archivo) {
+        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+            String linea;
+            String nombre = "", tipo = "", puestoStr = "", carrera = "", email = "", tipoClienteStr = "";
+            int id = 0, edad = 0, sueldo = 0, promedio = 0;
+            Genero genero = null;
+
+            while ((linea = br.readLine()) != null) {
+                linea = linea.trim();
+                if (linea.contains("\"id\""))
+                    id = Integer.parseInt(linea.replaceAll("[^0-9]", ""));
+                else if (linea.contains("\"nombre\""))
+                    nombre = linea.split("\"")[3];
+                else if (linea.contains("\"edad\""))
+                    edad = Integer.parseInt(linea.replaceAll("[^0-9]", ""));
+                else if (linea.contains("\"genero\""))
+                    genero = Genero.valueOf(linea.split("\"")[3]);
+                else if (linea.contains("\"tipo\""))
+                    tipo = linea.split("\"")[3];
+                else if (linea.contains("\"sueldo\""))
+                    sueldo = (int) Double.parseDouble(linea.replaceAll("[^0-9.]", ""));
+                else if (linea.contains("\"puesto\""))
+                    puestoStr = linea.split("\"")[3];
+                else if (linea.contains("\"carrera\""))
+                    carrera = linea.split("\"")[3];
+                else if (linea.contains("\"promedio\""))
+                    promedio = (int) Double.parseDouble(linea.replaceAll("[^0-9.]", ""));
+                else if (linea.contains("\"email\""))
+                    email = linea.split("\"")[3];
+                else if (linea.contains("\"tipoCliente\""))
+                    tipoClienteStr = linea.split("\"")[3];
+                else if (linea.equals("}") || linea.equals("},")) {
+                    if (!tipo.isEmpty()) {
+                        Persona p = null;
+                        switch (tipo) {
+                            case "Empleado" ->
+                                p = new Empleado(id, nombre, edad, genero, sueldo, Puesto.valueOf(puestoStr));
+                            case "Estudiante" ->
+                                p = new Estudiante(id, nombre, edad, genero, carrera, promedio);
+                            case "Cliente" ->
+                                p = new Cliente(id, nombre, edad, genero, email, TipoCliente.valueOf(tipoClienteStr));
+                        }
+                        if (p != null) administrar.add((P) p);
+                        tipo = ""; nombre = ""; puestoStr = ""; carrera = ""; email = ""; tipoClienteStr = "";
+                        id = 0; edad = 0; sueldo = 0; promedio = 0; genero = null;
+                    }
+                }
             }
-
-            bw.write("]");
-            System.out.println("Lista guardada en JSON: " + archivo);
+            System.out.println("JSON cargado correctamente.");
         } catch (IOException e) {
-            System.out.println("Error al guardar JSON: " + e.getMessage());
+            System.out.println("Error al cargar JSON: " + e.getMessage());
         }
     }
- 
- 
-
+    
     public void exportarTXT(String archivo, Predicate<P> criterio) {
         try (
             FileWriter fw = new FileWriter(archivo);

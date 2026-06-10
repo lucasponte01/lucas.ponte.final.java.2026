@@ -70,7 +70,6 @@ public abstract class Persona implements Comparable<Persona>, Serializable {
     
 
     public void mostrarDatos() {
-        // Método a resolver...
     }
 
     public int comparar(Persona otra) {

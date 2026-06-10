@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 
 public class Principal extends Application {
 
-    
+    // Gestión y lista observable para la tabla
     private Gestion<Persona> gestion = new Gestion<>();
     private ObservableList<Persona> listaObservable = FXCollections.observableArrayList();
     private TableView<Persona> tabla = new TableView<>();
@@ -20,7 +20,7 @@ public class Principal extends Application {
     @Override
     public void start(Stage stage) {
 
-        //Tabla
+        // ── TABLA ──────────────────────────────────────────────
         TableColumn<Persona, Integer> colId = new TableColumn<>("ID");
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
 
@@ -36,11 +36,23 @@ public class Principal extends Application {
         TableColumn<Persona, String> colTipo = new TableColumn<>("Tipo");
         colTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
 
-        tabla.getColumns().addAll(colId, colNombre, colEdad, colGenero, colTipo);
+        TableColumn<Persona, String> colExtra = new TableColumn<>("Extra");
+        colExtra.setCellValueFactory(c -> {
+            Persona p = c.getValue();
+            if (p instanceof Empleado e)
+                return new javafx.beans.property.SimpleStringProperty("Sueldo: $" + e.getSueldo() + " | Puesto: " + e.getPuesto());
+            if (p instanceof Estudiante est)
+                return new javafx.beans.property.SimpleStringProperty("Carrera: " + est.getCarrera() + " | Promedio: " + est.getPromedio());
+            if (p instanceof Cliente cli)
+                return new javafx.beans.property.SimpleStringProperty("Email: " + cli.getEmail() + " | Tipo: " + cli.getTipoCliente());
+            return new javafx.beans.property.SimpleStringProperty("");
+        });
+        
+        tabla.getColumns().addAll(colId, colNombre, colEdad, colGenero, colTipo, colExtra);
         tabla.setItems(listaObservable);
         tabla.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        // Formulario
+        // ── FORMULARIO ─────────────────────────────────────────
         TextField txtId     = new TextField(); txtId.setPromptText("ID");
         TextField txtNombre = new TextField(); txtNombre.setPromptText("Nombre");
         TextField txtEdad   = new TextField(); txtEdad.setPromptText("Edad");
@@ -53,7 +65,7 @@ public class Principal extends Application {
         cmbTipo.getItems().addAll("Empleado", "Estudiante", "Cliente");
         cmbTipo.setPromptText("Tipo");
 
-        
+        // Campos específicos por tipo
         TextField txtExtra1 = new TextField(); txtExtra1.setPromptText("Sueldo / Carrera / Email");
         TextField txtExtra2 = new TextField(); txtExtra2.setPromptText("Puesto / Promedio / TipoCliente");
 
@@ -67,7 +79,7 @@ public class Principal extends Application {
         form.add(new Label("Extra 1:"), 0, 5); form.add(txtExtra1,  1, 5);
         form.add(new Label("Extra 2:"), 0, 6); form.add(txtExtra2,  1, 6);
 
-        // Bt 
+        // ── BOTONES CRUD ───────────────────────────────────────
         Button btnAgregar   = new Button("Agregar");
         Button btnActualizar = new Button("Actualizar");
         Button btnEliminar  = new Button("Eliminar");
@@ -162,7 +174,7 @@ public class Principal extends Application {
             }
         });
 
-        // Limpiar
+        // Limpiar formulario
         btnLimpiar.setOnAction(e -> {
             txtId.clear(); txtNombre.clear(); txtEdad.clear();
             txtExtra1.clear(); txtExtra2.clear();
@@ -170,7 +182,7 @@ public class Principal extends Application {
             lblMensaje.setText("");
         });
 
-       
+        // Seleccionar fila en tabla → cargar en formulario
         tabla.getSelectionModel().selectedItemProperty().addListener((obs, old, sel) -> {
             if (sel != null) {
                 txtId.setText(String.valueOf(sel.getId()));
@@ -184,20 +196,20 @@ public class Principal extends Application {
         HBox botonescrud = new HBox(8, btnAgregar, btnActualizar, btnEliminar, btnLimpiar);
         botonescrud.setPadding(new Insets(8));
 
-        //Bt 2
+        // ── BOTONES EXTRAS ─────────────────────────────────────
         Button btnOrdenarNombre = new Button("Ordenar por Nombre");
         Button btnOrdenarEdad   = new Button("Ordenar por Edad");
         Button btnFiltrarMayores = new Button("Filtrar +30");
         Button btnAumento       = new Button("Aumento 10%");
 
         btnOrdenarNombre.setOnAction(e -> {
-            gestion.ordenar();
+            gestion.ordenar(); // usa Comparable
             actualizarTabla();
             lblMensaje.setText("Ordenado por nombre.");
         });
 
         btnOrdenarEdad.setOnAction(e -> {
-            gestion.ordenar(Comparar.porEdad()); 
+            gestion.ordenar(Comparar.porEdad()); // usa Comparator
             actualizarTabla();
             lblMensaje.setText("Ordenado por edad.");
         });
@@ -221,11 +233,13 @@ public class Principal extends Application {
                                         btnFiltrarMayores, btnAumento);
         botonesExtra.setPadding(new Insets(8));
 
-        // Bt 3
+        // ── BOTONES PERSISTENCIA ───────────────────────────────
         Button btnGuardarDat = new Button("Guardar .dat");
         Button btnCargarDat  = new Button("Cargar .dat");
         Button btnGuardarCSV = new Button("Guardar CSV");
+        Button btncargarCSV = new Button("Cargar CSV");
         Button btnGuardarJSON = new Button("Guardar JSON");
+        Button btncargarJSON = new Button("Cargar JSON");
         Button btnExportarTXT = new Button("Exportar TXT");
 
         btnGuardarDat.setOnAction(e -> {
@@ -243,9 +257,21 @@ public class Principal extends Application {
             gestion.guardarCSV("personas.csv");
             lblMensaje.setText("Guardado en personas.csv");
         });
+        
+        btncargarCSV.setOnAction(e -> {
+            gestion.cargarCSV("personas.csv");
+            actualizarTabla();
+            lblMensaje.setText("cargando desde personas.csv");
+        });
 
         btnGuardarJSON.setOnAction(e -> {
             gestion.guardarJSON("personas.json");
+            lblMensaje.setText("Guardado en personas.json");
+        });
+        
+        btncargarJSON.setOnAction(e -> {
+            gestion.cargarJSON("personas.json");
+            actualizarTabla();
             lblMensaje.setText("Guardado en personas.json");
         });
 
@@ -255,10 +281,10 @@ public class Principal extends Application {
         });
 
         HBox botonesPers = new HBox(8, btnGuardarDat, btnCargarDat,
-                                       btnGuardarCSV, btnGuardarJSON, btnExportarTXT);
+        btnGuardarCSV, btncargarCSV, btnGuardarJSON, btncargarJSON, btnExportarTXT);
         botonesPers.setPadding(new Insets(8));
 
-        
+        // ── LAYOUT PRINCIPAL ───────────────────────────────────
         VBox izquierda = new VBox(8, new Label("Formulario"), form, botonescrud);
         izquierda.setPadding(new Insets(8));
 
@@ -268,7 +294,7 @@ public class Principal extends Application {
 
         HBox root = new HBox(16, izquierda, derecha);
         root.setPadding(new Insets(12));
-
+        colExtra.setPrefWidth(300);
         Scene scene = new Scene(root, 900, 550);
         stage.setTitle("Sistema de Gestión de Personas");
         stage.setScene(scene);

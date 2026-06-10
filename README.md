@@ -35,7 +35,10 @@ Guardar y cargar datos en formato .dat, .csv, .json y .txt
 <img width="1365" height="766" alt="Captura de pantalla 2026-06-07 191519" src="https://github.com/user-attachments/assets/dce4b879-5511-4ffb-8c0a-0f14d5b03792" />
 
 4.Guardar y cargar datos con los botones de persistencia.
-<img width="1365" height="767" alt="Captura de pantalla 2026-06-07 191615" src="https://github.com/user-attachments/assets/fb960054-bfc5-4443-9751-728b3696697c" />
+
+<img width="1365" height="766" alt="Captura de pantalla 2026-06-09 215558" src="https://github.com/user-attachments/assets/18657687-48aa-4938-a12e-ed24f590ff1f" />
+
+
 <img width="1365" height="767" alt="Captura de pantalla 2026-06-07 191623" src="https://github.com/user-attachments/assets/f9e8728a-f896-43dc-ae24-3b135ec07fb6" />
 
 *Foto de el diagrama UML*

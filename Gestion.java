@@ -102,12 +102,12 @@ public class Gestion<P extends Persona> implements Administrar<P> {
     
     
 
-        // Orden natural — usa compareTo() de Persona (por nombre)
+        //nombre
         public void ordenar() {
             Collections.sort(administrar);
         }
 
-        // Orden personalizado — usa un Comparator
+        // otro orden
         public void ordenar(Comparator<P> comparador) {
             administrar.sort(comparador);
         }
@@ -153,16 +153,16 @@ public class Gestion<P extends Persona> implements Administrar<P> {
                      .append(p.getGenero()).append(",")
                      .append(p.getClass().getSimpleName());
 
-                // Agregar datos específicos según la clase
+                
                 if (p instanceof Empleado emp) {
                     linea.append(",").append(emp.getSueldo())
-                         .append(",").append(emp.getPuesto()); // Aquí se guarda el puesto real
+                         .append(",").append(emp.getPuesto()); 
                 } else if (p instanceof Estudiante est) {
                     linea.append(",").append(est.getCarrera())
                          .append(",").append(est.getPromedio());
                 } else if (p instanceof Cliente cli) {
                     linea.append(",").append(cli.getEmail())
-                         .append(",").append(cli.getTipoCliente()); // Aquí se guarda el tipo real
+                         .append(",").append(cli.getTipoCliente()); 
                 }
 
                 bw.write(linea.toString());
@@ -230,9 +230,9 @@ public class Gestion<P extends Persona> implements Administrar<P> {
                  bw.newLine();
                  bw.write("    \"genero\": \"" + p.getGenero() + "\",");
                  bw.newLine();
-                 bw.write("    \"tipo\": \"" + p.getClass().getSimpleName() + "\""); // Sin coma inicial, la controlamos abajo
+                 bw.write("    \"tipo\": \"" + p.getClass().getSimpleName() + "\""); 
 
-                 // --- ESCRIBIR ATRIBUTOS ESPECÍFICOS ---
+                 
                  if (p instanceof Empleado emp) {
                      bw.write(","); bw.newLine();
                      bw.write("    \"sueldo\": " + emp.getSueldo() + ","); bw.newLine();
@@ -248,7 +248,7 @@ public class Gestion<P extends Persona> implements Administrar<P> {
                  }
                  bw.newLine();
 
-                 // Cerrar el objeto actual del array
+                 
                  bw.write(i < administrar.size() - 1 ? "  }," : "  }");
                  bw.newLine();
              }

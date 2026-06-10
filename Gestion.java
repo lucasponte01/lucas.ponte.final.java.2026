@@ -99,15 +99,13 @@ public class Gestion<P extends Persona> implements Administrar<P> {
         }
         return resultado;
     }   
-    
-    
-
-        //nombre
+   
+        // Orden por nombre
         public void ordenar() {
             Collections.sort(administrar);
         }
 
-        // otro orden
+        // Orden por edad
         public void ordenar(Comparator<P> comparador) {
             administrar.sort(comparador);
         }
@@ -153,16 +151,16 @@ public class Gestion<P extends Persona> implements Administrar<P> {
                      .append(p.getGenero()).append(",")
                      .append(p.getClass().getSimpleName());
 
-                
+               
                 if (p instanceof Empleado emp) {
                     linea.append(",").append(emp.getSueldo())
-                         .append(",").append(emp.getPuesto()); 
+                         .append(",").append(emp.getPuesto()); // Aquí se guarda el puesto real
                 } else if (p instanceof Estudiante est) {
                     linea.append(",").append(est.getCarrera())
                          .append(",").append(est.getPromedio());
                 } else if (p instanceof Cliente cli) {
                     linea.append(",").append(cli.getEmail())
-                         .append(",").append(cli.getTipoCliente()); 
+                         .append(",").append(cli.getTipoCliente()); // Aquí se guarda el tipo real
                 }
 
                 bw.write(linea.toString());
@@ -173,43 +171,50 @@ public class Gestion<P extends Persona> implements Administrar<P> {
             System.out.println("Error al guardar CSV: " + e.getMessage());
         }
     }
- 
+    
     public void cargarCSV(String archivo) {
-        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+        try (
+            BufferedReader br = new BufferedReader(new FileReader(archivo))
+        ) {
             br.readLine();
             String linea;
             while ((linea = br.readLine()) != null) {
                 String[] datos = linea.split(",");
-                if (datos.length < 7) continue;
-                int id = Integer.parseInt(datos[0].trim());
-                String nombre = datos[1].trim();
-                int edad = Integer.parseInt(datos[2].trim());
-                Genero genero = Genero.valueOf(datos[3].trim());
-                String tipo = datos[4].trim();
-                String extra1 = datos[5].trim();
-                String extra2 = datos[6].trim();
+                int id = Integer.parseInt(datos[0]);
+                String nombre = datos[1];
+                int edad = Integer.parseInt(datos[2]);
+        
+                Genero genero = Genero.valueOf(datos[3].toUpperCase());
+                String tipo = datos[4];
+
                 Persona p = null;
                 switch (tipo) {
-                    case "Empleado" ->
-                        p = new Empleado(id, nombre, edad, genero,
-                            Integer.parseInt(extra1),
-                            Puesto.valueOf(extra2));
-                    case "Estudiante" ->
-                        p = new Estudiante(id, nombre, edad, genero,
-                            extra1, Integer.parseInt(extra2));
-                    case "Cliente" ->
-                        p = new Cliente(id, nombre, edad, genero,
-                            extra1, TipoCliente.valueOf(extra2));
+                    case "Empleado" -> {
+                        int sueldo = Integer.parseInt(datos[5].trim());
+                        Puesto puesto = Puesto.valueOf(datos[6].toUpperCase().trim());
+                        p = new Empleado(id, nombre, edad, genero, sueldo, puesto);
+                    }
+                    case "Estudiante" -> {
+                        String carrera = datos[5].trim();
+                        int promedio = Integer.parseInt(datos[6].trim());
+                        p = new Estudiante(id, nombre, edad, genero, carrera, promedio);
+                    }
+                    case "Cliente" -> {
+                        String email = datos[5].trim();
+                        TipoCliente tipoCliente = TipoCliente.valueOf(datos[6].toUpperCase().trim());
+                        p = new Cliente(id, nombre, edad, genero, email, tipoCliente);
+                    }
                 }
-                if (p != null) administrar.add((P) p);
+                if (p != null) {
+                    administrar.add((P) p);
+                }
             }
             System.out.println("CSV cargado correctamente.");
-        } catch (IOException e) {
-            System.out.println("Error al cargar CSV: " + e.getMessage());
+        } catch (IOException | IllegalArgumentException e) {
+            System.out.println("Error al cargar CSV (posible dato inválido): " + e.getMessage());
         }
     }
-
- 
+    
     public void guardarJSON(String archivo) {
          try (
              FileWriter fw = new FileWriter(archivo);
@@ -230,9 +235,9 @@ public class Gestion<P extends Persona> implements Administrar<P> {
                  bw.newLine();
                  bw.write("    \"genero\": \"" + p.getGenero() + "\",");
                  bw.newLine();
-                 bw.write("    \"tipo\": \"" + p.getClass().getSimpleName() + "\""); 
+                 bw.write("    \"tipo\": \"" + p.getClass().getSimpleName() + "\"");
 
-                 
+                
                  if (p instanceof Empleado emp) {
                      bw.write(","); bw.newLine();
                      bw.write("    \"sueldo\": " + emp.getSueldo() + ","); bw.newLine();
@@ -260,61 +265,83 @@ public class Gestion<P extends Persona> implements Administrar<P> {
              System.out.println("Error al guardar JSON: " + e.getMessage());
          }
      }
- 
     public void cargarJSON(String archivo) {
-        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+        try (
+            BufferedReader br = new BufferedReader(new FileReader(archivo))
+        ) {
             String linea;
-            String nombre = "", tipo = "", puestoStr = "", carrera = "", email = "", tipoClienteStr = "";
-            int id = 0, edad = 0, sueldo = 0, promedio = 0;
-            Genero genero = null;
+            
+            
+            String nombre = ""; 
+            int id = 0, edad = 0;
+            Genero genero = Genero.MASCULINO; 
+            String tipo = "";
+            
+            
+            int sueldo = 0;
+            Puesto puesto = Puesto.ADMINISTRATIVO;
+            String carrera = "";
+            int promedio = 0;
+            String email = "";
+            TipoCliente tipoCliente = TipoCliente.REGULAR;
 
             while ((linea = br.readLine()) != null) {
                 linea = linea.trim();
+                
                 if (linea.contains("\"id\""))
                     id = Integer.parseInt(linea.replaceAll("[^0-9]", ""));
                 else if (linea.contains("\"nombre\""))
-                    nombre = linea.split("\"")[3];
+                    nombre = linea.split(":")[1].replaceAll("[\"\\s,]", "");
                 else if (linea.contains("\"edad\""))
                     edad = Integer.parseInt(linea.replaceAll("[^0-9]", ""));
-                else if (linea.contains("\"genero\""))
-                    genero = Genero.valueOf(linea.split("\"")[3]);
-                else if (linea.contains("\"tipo\""))
-                    tipo = linea.split("\"")[3];
-                else if (linea.contains("\"sueldo\""))
-                    sueldo = (int) Double.parseDouble(linea.replaceAll("[^0-9.]", ""));
-                else if (linea.contains("\"puesto\""))
-                    puestoStr = linea.split("\"")[3];
-                else if (linea.contains("\"carrera\""))
-                    carrera = linea.split("\"")[3];
-                else if (linea.contains("\"promedio\""))
-                    promedio = (int) Double.parseDouble(linea.replaceAll("[^0-9.]", ""));
-                else if (linea.contains("\"email\""))
-                    email = linea.split("\"")[3];
+                else if (linea.contains("\"genero\"")) {
+                    String valorGenero = linea.split(":")[1].replaceAll("[\"\\s,]", "").toUpperCase();
+                    genero = Genero.valueOf(valorGenero);
+                }
                 else if (linea.contains("\"tipoCliente\""))
-                    tipoClienteStr = linea.split("\"")[3];
+                    tipoCliente = TipoCliente.valueOf(linea.split(":")[1].replaceAll("[\"\\s,]", "").toUpperCase());
+                else if (linea.contains("\"tipo\""))
+                    tipo = linea.split(":")[1].replaceAll("[\"\\s,]", "");
+                
+                // --- CAPTURA DE ATRIBUTOS ESPECÍFICOS ---
+                else if (linea.contains("\"sueldo\""))
+                    sueldo = Integer.parseInt(linea.replaceAll("[^0-9]", ""));
+                else if (linea.contains("\"puesto\""))
+                    puesto = Puesto.valueOf(linea.split(":")[1].replaceAll("[\"\\s,]", "").toUpperCase());
+                else if (linea.contains("\"carrera\""))
+                    carrera = linea.split(":")[1].replaceAll("[\"\\s,]", "");
+                else if (linea.contains("\"promedio\""))
+                    promedio = Integer.parseInt(linea.replaceAll("[^0-9]", ""));
+                else if (linea.contains("\"email\""))
+                    email = linea.split(":")[1].replaceAll("[\"\\s,]", "");
+                else if (linea.contains("\"tipoCliente\""))
+                    tipoCliente = TipoCliente.valueOf(linea.split(":")[1].replaceAll("[\"\\s,]", "").toUpperCase());
+                
+             
                 else if (linea.equals("}") || linea.equals("},")) {
                     if (!tipo.isEmpty()) {
                         Persona p = null;
                         switch (tipo) {
-                            case "Empleado" ->
-                                p = new Empleado(id, nombre, edad, genero, sueldo, Puesto.valueOf(puestoStr));
-                            case "Estudiante" ->
-                                p = new Estudiante(id, nombre, edad, genero, carrera, promedio);
-                            case "Cliente" ->
-                                p = new Cliente(id, nombre, edad, genero, email, TipoCliente.valueOf(tipoClienteStr));
+                            case "Empleado" -> p = new Empleado(id, nombre, edad, genero, sueldo, puesto);
+                            case "Estudiante" -> p = new Estudiante(id, nombre, edad, genero, carrera, promedio);
+                            case "Cliente" -> p = new Cliente(id, nombre, edad, genero, email, tipoCliente);
                         }
                         if (p != null) administrar.add((P) p);
-                        tipo = ""; nombre = ""; puestoStr = ""; carrera = ""; email = ""; tipoClienteStr = "";
-                        id = 0; edad = 0; sueldo = 0; promedio = 0; genero = null;
+                        
+                     
+                        tipo = ""; nombre = ""; id = 0; edad = 0;
+                        genero = Genero.MASCULINO;
+                        sueldo = 0; puesto = Puesto.ADMINISTRATIVO;
+                        carrera = ""; promedio = 0;
+                        email = ""; tipoCliente = TipoCliente.REGULAR;
                     }
                 }
             }
-            System.out.println("JSON cargado correctamente.");
-        } catch (IOException e) {
+            System.out.println("JSON cargado correctamente con todos sus atributos específicos.");
+        } catch (IOException | IllegalArgumentException e) {
             System.out.println("Error al cargar JSON: " + e.getMessage());
         }
     }
-    
     public void exportarTXT(String archivo, Predicate<P> criterio) {
         try (
             FileWriter fw = new FileWriter(archivo);

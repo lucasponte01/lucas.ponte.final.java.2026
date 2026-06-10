@@ -9,7 +9,6 @@ package finalprogra2;
  * @author lucas
  */
 public enum Genero {
-    Masculino,
-    Femenino,
-    Indefinido
+    MASCULINO,
+    FEMENINO
 }

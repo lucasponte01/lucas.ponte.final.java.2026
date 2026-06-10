@@ -20,26 +20,25 @@ Guardar y cargar datos en formato .dat, .csv, .json y .txt
 *Como se usa*:
 
 1.Completar el formulario de la izquierda y apretar Agregar.
-<img width="1365" height="767" alt="Captura de pantalla 2026-06-07 192446" src="https://github.com/user-attachments/assets/90dcc9b9-40fd-4f31-8adb-24d207761346" />
+<img width="1359" height="767" alt="Captura de pantalla 2026-06-10 152918" src="https://github.com/user-attachments/assets/780fe2e4-2290-4745-97fb-f77bb32a261e" />
 
-<img width="1365" height="767" alt="Captura de pantalla 2026-06-07 192517" src="https://github.com/user-attachments/assets/ac00a1ce-591f-4171-9f0a-86a5e7dd94a7" />
+<img width="1359" height="767" alt="Captura de pantalla 2026-06-10 153007" src="https://github.com/user-attachments/assets/f2e7802e-08ff-4b3e-8638-a0432287e03e" />
+
 
 2.Seleccionar un id y una fila de la tabla para editar.
-<img width="1365" height="766" alt="Captura de pantalla 2026-06-07 191429" src="https://github.com/user-attachments/assets/19295401-62e1-48e5-8f38-08c85f28500e" />
+<img width="1359" height="763" alt="Captura de pantalla 2026-06-10 153115" src="https://github.com/user-attachments/assets/1df4db69-435e-45ab-8bb9-5c5582176674" />
 
-<img width="1365" height="767" alt="Captura de pantalla 2026-06-07 191452" src="https://github.com/user-attachments/assets/0be0e17b-b5fe-44af-a9c0-ddcb10515659" />
+<img width="1359" height="767" alt="Captura de pantalla 2026-06-10 153206" src="https://github.com/user-attachments/assets/477b569e-ed7b-4b2c-96c8-a7417d97b9b9" />
 
 3.Usar los botones de ordenar y filtrar.
-<img width="1365" height="767" alt="Captura de pantalla 2026-06-07 191511" src="https://github.com/user-attachments/assets/0fe65acc-1f7c-49cb-b22d-d8fd255fa02d" />
+<img width="1359" height="767" alt="Captura de pantalla 2026-06-10 153304" src="https://github.com/user-attachments/assets/1eab4c64-eaaa-42a1-a56b-23167c2d4a93" />
 
-<img width="1365" height="766" alt="Captura de pantalla 2026-06-07 191519" src="https://github.com/user-attachments/assets/dce4b879-5511-4ffb-8c0a-0f14d5b03792" />
+<img width="1359" height="767" alt="Captura de pantalla 2026-06-10 153319" src="https://github.com/user-attachments/assets/e06cce5a-0a81-4d41-be69-db9c8db51ccd" />
 
 4.Guardar y cargar datos con los botones de persistencia.
+<img width="1359" height="767" alt="Captura de pantalla 2026-06-10 153424" src="https://github.com/user-attachments/assets/030b4762-801e-4d3c-9d7f-d7b087a66565" />
 
-<img width="1365" height="766" alt="Captura de pantalla 2026-06-09 215558" src="https://github.com/user-attachments/assets/18657687-48aa-4938-a12e-ed24f590ff1f" />
-
-
-<img width="1365" height="767" alt="Captura de pantalla 2026-06-07 191623" src="https://github.com/user-attachments/assets/f9e8728a-f896-43dc-ae24-3b135ec07fb6" />
+<img width="1359" height="767" alt="Captura de pantalla 2026-06-10 153432" src="https://github.com/user-attachments/assets/9a19c5e6-78bc-490b-99a5-bde3605f8857" />
 
 *Foto de el diagrama UML*
 <img width="1560" height="1130" alt="progra2_casi final" src="https://github.com/user-attachments/assets/7258c4d7-50e8-49e2-b0bc-9bd9de611179" />

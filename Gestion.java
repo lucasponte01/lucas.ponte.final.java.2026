@@ -113,10 +113,10 @@ public class Gestion<P extends Persona> implements Administrar<P> {
     //persistencia    
     public void guardarDat(String archivo) {
     try (
-        FileOutputStream fos = new FileOutputStream(archivo);
-        ObjectOutputStream oos = new ObjectOutputStream(fos)
+        FileOutputStream serializado = new FileOutputStream(archivo);
+        ObjectOutputStream deserialzado = new ObjectOutputStream(serializado)
     ) {
-        oos.writeObject(administrar);
+        deserialzado.writeObject(administrar);
         System.out.println("Lista guardada en: " + archivo);
     } catch (IOException e) {
         System.out.println("Error al guardar .dat: " + e.getMessage());
@@ -126,10 +126,10 @@ public class Gestion<P extends Persona> implements Administrar<P> {
 
     public void cargarDat(String archivo) {
         try (
-            FileInputStream fis = new FileInputStream(archivo);
-            ObjectInputStream ois = new ObjectInputStream(fis)
+            FileInputStream serializado = new FileInputStream(archivo);
+            ObjectInputStream deserialzado = new ObjectInputStream(serializado)
         ) {
-            administrar = (ArrayList<P>) ois.readObject();
+            administrar = (ArrayList<P>) deserialzado.readObject();
             System.out.println("Lista cargada desde: " + archivo);
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Error al cargar .dat: " + e.getMessage());
@@ -138,10 +138,10 @@ public class Gestion<P extends Persona> implements Administrar<P> {
  
  
     public void guardarCSV(String archivo) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivo))) {
+        try (BufferedWriter titulo = new BufferedWriter(new FileWriter(archivo))) {
             
-            bw.write("id,nombre,edad,genero,tipo,datoExtra1,datoExtra2");
-            bw.newLine();
+            titulo.write("id,nombre,edad,genero,tipo,datoExtra1,datoExtra2");
+            titulo.newLine();
 
             for (P p : administrar) {
                 StringBuilder linea = new StringBuilder();
@@ -163,8 +163,8 @@ public class Gestion<P extends Persona> implements Administrar<P> {
                          .append(",").append(cli.getTipoCliente()); // Aquí se guarda el tipo real
                 }
 
-                bw.write(linea.toString());
-                bw.newLine();
+                titulo.write(linea.toString());
+                titulo.newLine();
             }
             System.out.println("Lista guardada en CSV: " + archivo);
         } catch (IOException e) {
@@ -174,11 +174,11 @@ public class Gestion<P extends Persona> implements Administrar<P> {
     
     public void cargarCSV(String archivo) {
         try (
-            BufferedReader br = new BufferedReader(new FileReader(archivo))
+            BufferedReader titulo = new BufferedReader(new FileReader(archivo))
         ) {
-            br.readLine();
+            titulo.readLine();
             String linea;
-            while ((linea = br.readLine()) != null) {
+            while ((linea = titulo.readLine()) != null) {
                 String[] datos = linea.split(",");
                 int id = Integer.parseInt(datos[0]);
                 String nombre = datos[1];
@@ -217,49 +217,49 @@ public class Gestion<P extends Persona> implements Administrar<P> {
     
     public void guardarJSON(String archivo) {
          try (
-             FileWriter fw = new FileWriter(archivo);
-             BufferedWriter bw = new BufferedWriter(fw)
+             FileWriter file = new FileWriter(archivo);
+             BufferedWriter titulo = new BufferedWriter(file)
          ) {
-             bw.write("[");
-             bw.newLine();
+             titulo.write("[");
+             titulo.newLine();
 
              for (int i = 0; i < administrar.size(); i++) {
                  P p = administrar.get(i);
-                 bw.write("  {");
-                 bw.newLine();
-                 bw.write("    \"id\": " + p.getId() + ",");
-                 bw.newLine();
-                 bw.write("    \"nombre\": \"" + p.getNombre() + "\",");
-                 bw.newLine();
-                 bw.write("    \"edad\": " + p.getEdad() + ",");
-                 bw.newLine();
-                 bw.write("    \"genero\": \"" + p.getGenero() + "\",");
-                 bw.newLine();
-                 bw.write("    \"tipo\": \"" + p.getClass().getSimpleName() + "\"");
+                 titulo.write("  {");
+                 titulo.newLine();
+                 titulo.write("    \"id\": " + p.getId() + ",");
+                 titulo.newLine();
+                 titulo.write("    \"nombre\": \"" + p.getNombre() + "\",");
+                 titulo.newLine();
+                 titulo.write("    \"edad\": " + p.getEdad() + ",");
+                 titulo.newLine();
+                 titulo.write("    \"genero\": \"" + p.getGenero() + "\",");
+                 titulo.newLine();
+                 titulo.write("    \"tipo\": \"" + p.getClass().getSimpleName() + "\"");
 
                 
                  if (p instanceof Empleado emp) {
-                     bw.write(","); bw.newLine();
-                     bw.write("    \"sueldo\": " + emp.getSueldo() + ","); bw.newLine();
-                     bw.write("    \"puesto\": \"" + emp.getPuesto() + "\"");
+                     titulo.write(","); titulo.newLine();
+                     titulo.write("    \"sueldo\": " + emp.getSueldo() + ","); titulo.newLine();
+                     titulo.write("    \"puesto\": \"" + emp.getPuesto() + "\"");
                  } else if (p instanceof Estudiante est) {
-                     bw.write(","); bw.newLine();
-                     bw.write("    \"carrera\": \"" + est.getCarrera() + "\","); bw.newLine();
-                     bw.write("    \"promedio\": " + est.getPromedio());
+                     titulo.write(","); titulo.newLine();
+                     titulo.write("    \"carrera\": \"" + est.getCarrera() + "\","); titulo.newLine();
+                     titulo.write("    \"promedio\": " + est.getPromedio());
                  } else if (p instanceof Cliente cli) {
-                     bw.write(","); bw.newLine();
-                     bw.write("    \"email\": \"" + cli.getEmail() + "\","); bw.newLine();
-                     bw.write("    \"tipoCliente\": \"" + cli.getTipoCliente() + "\"");
+                     titulo.write(","); titulo.newLine();
+                     titulo.write("    \"email\": \"" + cli.getEmail() + "\","); titulo.newLine();
+                     titulo.write("    \"tipoCliente\": \"" + cli.getTipoCliente() + "\"");
                  }
-                 bw.newLine();
+                 titulo.newLine();
 
                  
-                 bw.write(i < administrar.size() - 1 ? "  }," : "  }");
-                 bw.newLine();
+                 titulo.write(i < administrar.size() - 1 ? "  }," : "  }");
+                 titulo.newLine();
              }
       
              
-             bw.write("]");
+             titulo.write("]");
              System.out.println("Lista guardada en JSON: " + archivo);
          } catch (IOException e) {
              System.out.println("Error al guardar JSON: " + e.getMessage());
@@ -267,7 +267,7 @@ public class Gestion<P extends Persona> implements Administrar<P> {
      }
     public void cargarJSON(String archivo) {
         try (
-            BufferedReader br = new BufferedReader(new FileReader(archivo))
+            BufferedReader titulo = new BufferedReader(new FileReader(archivo))
         ) {
             String linea;
             
@@ -285,7 +285,7 @@ public class Gestion<P extends Persona> implements Administrar<P> {
             String email = "";
             TipoCliente tipoCliente = TipoCliente.REGULAR;
 
-            while ((linea = br.readLine()) != null) {
+            while ((linea = titulo.readLine()) != null) {
                 linea = linea.trim();
                 
                 if (linea.contains("\"id\""))
@@ -344,40 +344,40 @@ public class Gestion<P extends Persona> implements Administrar<P> {
     }
     public void exportarTXT(String archivo, Predicate<P> criterio) {
         try (
-            FileWriter fw = new FileWriter(archivo);
-            BufferedWriter bw = new BufferedWriter(fw)
+            FileWriter file = new FileWriter(archivo);
+            BufferedWriter titulo = new BufferedWriter(file)
         ) {
             
-            bw.write("==============================");
-            bw.newLine();
-            bw.write("  LISTADO DE PERSONAS");
-            bw.newLine();
-            bw.write("  Fecha: " + new java.util.Date());
-            bw.newLine();
-            bw.write("==============================");
-            bw.newLine();
-            bw.newLine();
+            titulo.write("==============================");
+            titulo.newLine();
+            titulo.write("  LISTADO DE PERSONAS");
+            titulo.newLine();
+            titulo.write("  Fecha: " + new java.util.Date());
+            titulo.newLine();
+            titulo.write("==============================");
+            titulo.newLine();
+            titulo.newLine();
 
             int contador = 0;
             for (P p : administrar) {
                 if (criterio.test(p)) {
-                    bw.write("Nombre : " + p.getNombre());
-                    bw.newLine();
-                    bw.write("Edad   : " + p.getEdad());
-                    bw.newLine();
-                    bw.write("Género : " + p.getGenero());
-                    bw.newLine();
-                    bw.write("Tipo   : " + p.getClass().getSimpleName());
-                    bw.newLine();
-                    bw.write("------------------------------");
-                    bw.newLine();
+                    titulo.write("Nombre : " + p.getNombre());
+                    titulo.newLine();
+                    titulo.write("Edad   : " + p.getEdad());
+                    titulo.newLine();
+                    titulo.write("Género : " + p.getGenero());
+                    titulo.newLine();
+                    titulo.write("Tipo   : " + p.getClass().getSimpleName());
+                    titulo.newLine();
+                    titulo.write("------------------------------");
+                    titulo.newLine();
                     contador++;
                 }
             }
 
-            bw.newLine();
-            bw.write("Total registros: " + contador);
-            bw.newLine();
+            titulo.newLine();
+            titulo.write("Total registros: " + contador);
+            titulo.newLine();
             System.out.println("Exportado a TXT: " + archivo);
         } catch (IOException e) {
             System.out.println("Error al exportar TXT: " + e.getMessage());

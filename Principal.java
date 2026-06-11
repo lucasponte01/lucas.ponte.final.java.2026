@@ -201,7 +201,8 @@ public class Principal extends Application {
         Button btnOrdenarEdad   = new Button("Ordenar por Edad");
         Button btnFiltrarMayores = new Button("Filtrar +30");
         Button btnAumento       = new Button("Aumento 10%");
-
+        Button btnCambiarCarrera = new Button("Cambiar Carrera");
+        
         btnOrdenarNombre.setOnAction(e -> {
             gestion.ordenar(); // usa Comparable
             actualizarTabla();
@@ -228,9 +229,21 @@ public class Principal extends Application {
             actualizarTabla();
             lblMensaje.setText("Aumento del 10% aplicado a empleados.");
         });
+        
+        
+        btnCambiarCarrera.setOnAction(e -> {
+            Persona seleccionado = tabla.getSelectionModel().getSelectedItem();
+            if (seleccionado instanceof Estudiante est) {
+                est.cambiarCarrera(txtExtra1.getText());
+                actualizarTabla();
+                lblMensaje.setText("Carrera actualizada a: " + txtExtra1.getText());
+            } else {
+                lblMensaje.setText("Seleccioná un Estudiante de la tabla.");
+            }
+        });
 
         HBox botonesExtra = new HBox(8, btnOrdenarNombre, btnOrdenarEdad,
-                                        btnFiltrarMayores, btnAumento);
+                                        btnFiltrarMayores, btnAumento , btnCambiarCarrera);
         botonesExtra.setPadding(new Insets(8));
 
         //btn persistencia
